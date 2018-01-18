@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@EnableTransactionManagement
+@EnableTransactionManagement // tells spring to use transactional aspect for classes annotated with @Transactional
 @EnableJpaRepositories(basePackages = "com.concretepage.dao")
 public class PersistenceJPAConfig{
 
@@ -38,7 +38,7 @@ public class PersistenceJPAConfig{
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/prs");//jdbc:mysql://localhost:3306/prs?autoReconnect=true&amp;useSSL=false
+        dataSource.setUrl("jdbc:mysql://localhost:3306/paysa_dev");//jdbc:mysql://localhost:3306/prs?autoReconnect=true&amp;useSSL=false
         dataSource.setUsername( "root" );
         dataSource.setPassword( "root" );
         return dataSource;
@@ -63,4 +63,53 @@ public class PersistenceJPAConfig{
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         return properties;
     }
+
+    /*
+    *
+    *
+defining the entity manager factory.
+
+    @Configuration
+public class EntityManagerFactoriesConfiguration {
+    @Autowired
+    private DataSource dataSource;
+
+    @Bean(name = "entityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean emf() {
+        LocalContainerEntityManagerFactoryBean emf = ...
+        emf.setDataSource(dataSource);
+        emf.setPackagesToScan(
+            new String[] {"your.package"});
+        emf.setJpaVendorAdapter(
+            new HibernateJpaVendorAdapter());
+        return emf;
+    }
+}
+
+
+configure the Transaction Manager and to apply the Transactional Aspect in @Transactional annotated classes
+
+@EnableTransactionManagement
+public class TransactionManagersConfig {
+    @Autowired
+    EntityManagerFactory emf;
+    @Autowired
+    private DataSource dataSource;
+
+    @Bean(name = "transactionManager")
+    public PlatformTransactionManager transactionManager() {
+        JpaTransactionManager tm =
+            new JpaTransactionManager();
+            tm.setEntityManagerFactory(emf);
+            tm.setDataSource(dataSource);
+        return tm;
+    }
+}
+
+
+
+
+
+    *
+    * */
 }
