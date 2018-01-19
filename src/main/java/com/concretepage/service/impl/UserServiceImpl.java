@@ -39,6 +39,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userDAO.findByUsername(s);
+        if(user == null){
+            throw new UsernameNotFoundException("Invalid username or password.");
+        }
         return new org.springframework.security.core.userdetails.User(String.valueOf(user.getId()),user.getPassword(), Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
     }
 }
