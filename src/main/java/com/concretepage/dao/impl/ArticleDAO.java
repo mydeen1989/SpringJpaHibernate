@@ -3,16 +3,19 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 
 import com.concretepage.dao.IArticleDAO;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.concretepage.entity.Article;
-@Transactional
+@Transactional(propagation = Propagation.REQUIRES_NEW )
 @Repository
 public class ArticleDAO implements IArticleDAO {
-	@PersistenceContext	
+	@PersistenceContext(type = PersistenceContextType.EXTENDED)
 	private EntityManager entityManager;	
 	@Override
 	public Article getArticleById(int articleId) {
